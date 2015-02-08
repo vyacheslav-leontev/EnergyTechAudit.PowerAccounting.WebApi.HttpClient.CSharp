@@ -21,10 +21,10 @@ namespace EnergyTechAudit.PowerAccounting.WebApi.HttpClient
                     return true;
                 };
 
-                client.BaseAddress = new Uri("https://192.168.1.2");
+                client.BaseAddress = new Uri("https://192.168.1.2"); // https://eta.asd116.ru
 
                 client.DefaultRequestHeaders.Add("login", "Archive.Downloader");
-                client.DefaultRequestHeaders.Add("password", "xxxxx");
+                client.DefaultRequestHeaders.Add("password", "xxxxxx");
 
                 var requestUri = string.Format
                 (
@@ -42,18 +42,17 @@ namespace EnergyTechAudit.PowerAccounting.WebApi.HttpClient
                     .GetAsync(requestUri)
                     .Result;
 
-                if (response.StatusCode == HttpStatusCode.OK)
+                if (response != null && response.StatusCode == HttpStatusCode.OK)
                 {
                     byte[] content = response.Content.ReadAsByteArrayAsync().Result;
-                    if (response != null)
+
+                    string path = @"d:\ArchivePackageCs.xml";
+                    if (File.Exists(path))
                     {
-                        string path = @"d:\ArchivePackageCs.xml";
-                        if (File.Exists(path))
-                        {
-                            File.Delete(path);
-                        }
-                        File.WriteAllBytes(@"d:\ArchivePackageCs.xml", content);
+                        File.Delete(path);
                     }
+                    File.WriteAllBytes(path, content);
+
                 }
             }
         }
